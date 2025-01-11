@@ -1,3 +1,6 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 #include <stdlib.h>
 
 typedef struct {
@@ -14,3 +17,5 @@ int vector_pop_back(Vector* vec);
 void vector_destroy(Vector* vec);
 
 // int vector_resize(Vector* vec, size_t new_capacity);
+
+#endif // VECTOR_H
