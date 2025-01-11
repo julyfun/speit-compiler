@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "vector.h"
 
-typedef enum { LEX_OP, LEX_PF, LEX_PROP, LEX_OP, LEX_PRODUIT } LexemeType;
+typedef enum { LEX_PO, LEX_PF, LEX_PROP, LEX_OP, LEX_PRODUIT } LexemeType;
 
 typedef struct {
     LexemeType type;

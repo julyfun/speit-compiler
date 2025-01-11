@@ -18,7 +18,7 @@ void print_lexemes(Vector* list) {
         Lexeme* lexeme = (Lexeme*)vector_get(list, i);
         switch (lexeme->type) {
             // print with type and value
-            case LEX_OP:
+            case LEX_PO:
                 printf("PO");
                 break;
             case LEX_PF:
@@ -115,7 +115,7 @@ LexicalResult analyseur_lexical(char* input) {
             return res;
         }
         if (input[i] == '(') {
-            Lexeme lexeme = { LEX_OP, "" };
+            Lexeme lexeme = { LEX_PO, "" };
             add_lexeme(lexeme_list, lexeme);
             i++;
             continue;

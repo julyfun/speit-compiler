@@ -27,8 +27,8 @@ void test_add_lexeme() {
 
 void test_print_lexemes() {
     Vector* list = init_lexeme_list();
-    Lexeme lexeme1 = { LEX_OP, "example1" };
-    Lexeme lexeme2 = { LEX_PF, "example2" };
+    Lexeme lexeme1 = { LEX_PO, "" };
+    Lexeme lexeme2 = { LEX_PF, "" };
     add_lexeme(list, lexeme1);
     add_lexeme(list, lexeme2);
     printf("Expected output: PO PF\nActual output: ");
