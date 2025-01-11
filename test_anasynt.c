@@ -78,6 +78,7 @@ void test4() {
     add_lexeme(lexeme_list, (Lexeme) { LEX_PF });
 
     add_lexeme(lexeme_list, (Lexeme) { LEX_OP, "IMPLIQUE" });
+
     add_lexeme(lexeme_list, (Lexeme) { LEX_PO });
     add_lexeme(lexeme_list, (Lexeme) { LEX_PROP, "r5" });
     add_lexeme(lexeme_list, (Lexeme) { LEX_OP, "IMPLIQUE" });

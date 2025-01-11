@@ -63,7 +63,15 @@ void test_illegal() {
     char* input = "a b c * d";
     LexicalResult res = analyseur_lexical(input);
     assert(res.type == LEX_ERR);
-    printf("%s", res.error);
+    printf("Lexical Error: %s", res.error);
+    puts("");
+}
+
+void test_illegal_id() {
+    char* input = "a1→1b";
+    LexicalResult res = analyseur_lexical(input);
+    assert(res.type == LEX_ERR);
+    printf("Lexical Error: %s", res.error);
     puts("");
 }
 
@@ -75,6 +83,7 @@ int main() {
     test_read_lexeme("assets/Init.txt");
     test_read_lexeme("assets/Regles.txt");
     test_illegal();
+    test_illegal_id();
     printf("All tests passed\n");
     return 0;
 }

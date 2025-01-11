@@ -83,7 +83,7 @@ ParseResult parse_binary_op_expr(
     if (res.type == PARSE_ERR) {
         return res;
     }
-    // Could be more than one op
+    // Could be more than one op, could be none
     while (*index < lexeme_list->size) {
         Lexeme* lexeme = (Lexeme*)vector_get(lexeme_list, *index);
         if (lexeme->type != LEX_OP || strcmp(lexeme->value, op) != 0) {
