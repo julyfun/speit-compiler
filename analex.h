@@ -20,7 +20,7 @@ void print_lexemes(Vector* list);
 void destroy_lexeme_list(Vector* list);
 
 typedef struct {
-    enum { OK, ERR } type;
+    enum { LEX_OK, LEX_ERR } type;
     union {
         Vector* value;
         char error[MSG_LENGTH];

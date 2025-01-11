@@ -51,7 +51,7 @@ void test_read_lexeme(char* filename) {
         printf("---\n");
         printf("%s", line);
         LexicalResult res = analyseur_lexical(line);
-        if (res.type == ERR) {
+        if (res.type == LEX_ERR) {
             printf("Error: %s\n", res.error);
         } else {
             print_lexemes(res.value);
@@ -60,10 +60,11 @@ void test_read_lexeme(char* filename) {
 }
 
 void test_illegal() {
-    char* input = "a b c";
+    char* input = "a b c * d";
     LexicalResult res = analyseur_lexical(input);
-    assert(res.type == ERR);
+    assert(res.type == LEX_ERR);
     printf(res.error);
+    puts("");
 }
 
 int main() {
@@ -73,6 +74,7 @@ int main() {
     test_destroy_lexeme_list();
     test_read_lexeme("assets/Init.txt");
     test_read_lexeme("assets/Regles.txt");
+    test_illegal();
     printf("All tests passed\n");
     return 0;
 }

@@ -110,7 +110,7 @@ LexicalResult analyseur_lexical(char* input) {
             }
             char msg[MSG_LENGTH];
             sprintf(msg, "Invalid UTF-8 character %d at position %d", (int)input[i], i);
-            LexicalResult res = (LexicalResult) { ERR, .error = "" };
+            LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
             memcpy(res.error, msg, strlen(msg));
             return res;
         }
@@ -135,10 +135,10 @@ LexicalResult analyseur_lexical(char* input) {
             (int)input[i],
             i
         );
-        LexicalResult res = (LexicalResult) { ERR, .error = "" };
+        LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
         memcpy(res.error, error, strlen(error));
         return res;
     }
     add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
-    return (LexicalResult) { OK, .value = lexeme_list };
+    return (LexicalResult) { LEX_OK, .value = lexeme_list };
 }
