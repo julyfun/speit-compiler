@@ -15,11 +15,11 @@ void test_init_lexeme_list() {
 
 void test_add_lexeme() {
     Vector* list = init_lexeme_list();
-    Lexeme lexeme = { PO, "example" };
+    Lexeme lexeme = { LEX_OP, "example" };
     add_lexeme(list, lexeme);
     assert(list->size == 1);
     Lexeme* retrieved_lexeme = (Lexeme*)vector_get(list, 0);
-    assert(retrieved_lexeme->type == PO);
+    assert(retrieved_lexeme->type == LEX_OP);
     assert(strcmp(retrieved_lexeme->value, "example") == 0);
     destroy_lexeme_list(list);
     printf("test_add_lexeme passed\n");
@@ -27,8 +27,8 @@ void test_add_lexeme() {
 
 void test_print_lexemes() {
     Vector* list = init_lexeme_list();
-    Lexeme lexeme1 = { PO, "example1" };
-    Lexeme lexeme2 = { PF, "example2" };
+    Lexeme lexeme1 = { LEX_OP, "example1" };
+    Lexeme lexeme2 = { LEX_PF, "example2" };
     add_lexeme(list, lexeme1);
     add_lexeme(list, lexeme2);
     printf("Expected output: PO PF\nActual output: ");

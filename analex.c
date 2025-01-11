@@ -18,19 +18,19 @@ void print_lexemes(Vector* list) {
         Lexeme* lexeme = (Lexeme*)vector_get(list, i);
         switch (lexeme->type) {
             // print with type and value
-            case PO:
+            case LEX_OP:
                 printf("PO");
                 break;
-            case PF:
+            case LEX_PF:
                 printf("PF");
                 break;
-            case PROP:
+            case LEX_PROP:
                 printf("PROP(\"%s\")", lexeme->value);
                 break;
-            case OP:
+            case LEX_OP:
                 printf("OP(\"%s\")", lexeme->value);
                 break;
-            case PRODUIT:
+            case LEX_PRODUIT:
                 printf("PRODUIT");
                 break;
         }
@@ -48,7 +48,7 @@ void destroy_lexeme_list(Vector* list) {
 void add_buffer_as_lexeme(Vector* lexeme_list, char* buffer, int* buffer_index) {
     if (*buffer_index > 0) {
         buffer[*buffer_index] = '\0';
-        Lexeme lexeme = { PROP, "" }; // adding new one
+        Lexeme lexeme = { LEX_PROP, "" }; // adding new one
         strcpy(lexeme.value, buffer);
         add_lexeme(lexeme_list, lexeme);
         *buffer_index = 0;
@@ -93,10 +93,10 @@ LexicalResult analyseur_lexical(char* input) {
                 if (memcmp(input + i, UTF8_CHARS[j].bytes, UTF8_CHARS[j].length) == 0) {
                     // special: PRODUIT
                     if (UTF8_CHARS[j].name == "PRODUIT") {
-                        Lexeme lexeme = { PRODUIT, "" };
+                        Lexeme lexeme = { LEX_PRODUIT, "" };
                         add_lexeme(lexeme_list, lexeme);
                     } else {
-                        Lexeme lexeme = { OP, "" };
+                        Lexeme lexeme = { LEX_OP, "" };
                         strcpy(lexeme.value, UTF8_CHARS[j].name);
                         add_lexeme(lexeme_list, lexeme);
                     }
@@ -115,13 +115,13 @@ LexicalResult analyseur_lexical(char* input) {
             return res;
         }
         if (input[i] == '(') {
-            Lexeme lexeme = { PO, "" };
+            Lexeme lexeme = { LEX_OP, "" };
             add_lexeme(lexeme_list, lexeme);
             i++;
             continue;
         }
         if (input[i] == ')') {
-            Lexeme lexeme = { PF, "" };
+            Lexeme lexeme = { LEX_PF, "" };
             add_lexeme(lexeme_list, lexeme);
             i++;
             continue;

@@ -1,13 +1,10 @@
 #ifndef ANALEX_H
 #define ANALEX_H
 
+#include "constants.h"
 #include "vector.h"
 
-enum {
-    MSG_LENGTH = 128,
-};
-
-typedef enum { PO, PF, PROP, OP, PRODUIT } LexemeType;
+typedef enum { LEX_OP, LEX_PF, LEX_PROP, LEX_OP, LEX_PRODUIT } LexemeType;
 
 typedef struct {
     LexemeType type;
