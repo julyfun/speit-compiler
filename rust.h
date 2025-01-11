@@ -7,5 +7,5 @@ int is_alpha(char c) {
 }
 
 int is_space(char c) {
-    return c == ' ' || c == '\t';
+    return c == ' ' || c == '\t' || c== '\n';
 }
