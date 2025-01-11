@@ -27,10 +27,10 @@ void print_lexemes(Vector* list) {
                 printf("PF");
                 break;
             case LEX_PROP:
-                printf("PROP(\"%s\")", lexeme->value);
+                printf("Prop(\"%s\")", lexeme->value);
                 break;
             case LEX_OP:
-                printf("OP(\"%s\")", lexeme->value);
+                printf("Op(\"%s\")", lexeme->value);
                 break;
             case LEX_PRODUIT:
                 printf("PRODUIT");
