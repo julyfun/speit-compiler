@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "rust.h"
+
 Vector* init_lexeme_list() {
     return vector_new(sizeof(Lexeme));
 }
@@ -45,7 +47,7 @@ void destroy_lexeme_list(Vector* list) {
     vector_destroy(list);
 }
 
-void add_buffer_as_lexeme(Vector* lexeme_list, char* buffer, int* buffer_index) {
+void try_add_buffer_as_lexeme(Vector* lexeme_list, char* buffer, int* buffer_index) {
     if (*buffer_index > 0) {
         buffer[*buffer_index] = '\0';
         Lexeme lexeme = { LEX_PROP, "" }; // adding new one
@@ -75,16 +77,17 @@ LexicalResult analyseur_lexical(char* input) {
     char buffer[10];
     int buffer_index = 0;
     for (int i = 0; input[i] != '\0';) {
-        if (isspace(input[i])) {
+        if (is_space(input[i])) {
+            try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
             i++;
             continue;
         }
-        if (isalpha(input[i]) || isdigit(input[i])) {
+        if (is_alpha(input[i]) || is_digit(input[i])) {
             buffer[buffer_index++] = input[i];
             i++;
             continue;
         }
-        add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
+        try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
 
         // check if the current character is a UTF-8 character
         if (input[i] == (char)0xE2 || input[i] == (char)0xC2) {
@@ -92,7 +95,7 @@ LexicalResult analyseur_lexical(char* input) {
             for (int j = 0; j < sizeof(UTF8_CHARS) / sizeof(Utf8Char); j++) {
                 if (memcmp(input + i, UTF8_CHARS[j].bytes, UTF8_CHARS[j].length) == 0) {
                     // special: PRODUIT
-                    if (UTF8_CHARS[j].name == "PRODUIT") {
+                    if (strcmp(UTF8_CHARS[j].name, "PRODUIT") == 0) {
                         Lexeme lexeme = { LEX_PRODUIT, "" };
                         add_lexeme(lexeme_list, lexeme);
                     } else {
@@ -108,10 +111,8 @@ LexicalResult analyseur_lexical(char* input) {
             if (flag) {
                 continue;
             }
-            char msg[MSG_LENGTH];
-            sprintf(msg, "Invalid UTF-8 character %d at position %d", (int)input[i], i);
             LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-            memcpy(res.error, msg, strlen(msg));
+            sprintf(res.error, "Invalid UTF-8 character %d at position %d", (int)input[i], i);
             return res;
         }
         if (input[i] == '(') {
@@ -127,18 +128,16 @@ LexicalResult analyseur_lexical(char* input) {
             continue;
         }
         // return and show the what is the error character and position
-        char error[MSG_LENGTH];
+        LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
         sprintf(
-            error,
+            res.error,
             "Invalid character %c (ascii %d) at position %d",
             input[i],
             (int)input[i],
             i
         );
-        LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-        memcpy(res.error, error, strlen(error));
         return res;
     }
-    add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
+    try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
     return (LexicalResult) { LEX_OK, .value = lexeme_list };
 }

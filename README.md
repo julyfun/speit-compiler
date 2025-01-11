@@ -21,7 +21,7 @@ jst run test_analex.c analex.c vector.c
 <letter> ::= "a" | ... | "z"
 <id> ::= <lettre> { <lettre> | <chiffre> }
 
-<primary_expr> ::= <id> | "(" <expr> ")"
+<primary_expr> ::= <id> | "(" <arrow_expr> ")"
 <unary_expr> ::= <primary_expr> | ¬ <unary_expr>
 <and_expr> ::= <unary_expr> | <unary_expr> ∧ <and_expr>
 <or_expr> ::= <and_expr> | <and_expr> ∨ <or_expr>

@@ -63,7 +63,7 @@ void test_illegal() {
     char* input = "a b c * d";
     LexicalResult res = analyseur_lexical(input);
     assert(res.type == LEX_ERR);
-    printf(res.error);
+    printf("%s", res.error);
     puts("");
 }
 
