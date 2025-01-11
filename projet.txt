@@ -1,0 +1,738 @@
+1
+
+Les données
+
+Projet ICE4404P
+2024 – 2025
+À rendre pour le 12 décembre 2024, 23h55 sur Moodle
+L’objet de ce projet est de produire un compilateur de règles logiques qui nous
+permettra de les utiliser de diverses manières. Il s’agira
+1. d’écrire un analyseur lexical qui transformera chaque règle en une liste de
+lexèmes ;
+2. d’écrire un analyseur syntaxique qui transformera chaque liste de lexèmes en
+un arbre syntaxique ;
+3. d’écrire un analyseur sémantique qui vérifiera que l’arbre syntaxique produit
+est correct (et aura donc une chance de pouvoir être exécuté).
+ces trois précédents points définissent la première partie du projet !
+4. définir une machine virtuelle et un modèle d’exécution qui permettra les
+tâches attendues sur les règles logiques (évaluation, réécriture, ...) ;
+5. de coder cette machine virtuelle et son modèle d’exécution ;
+6. de réaliser une ou plusieurs tâches souhaitées.
+ces trois derniers points définissent la deuxième partie du projet !
+
+1
+
+Les données
+
+On possède un ensemble de règles logiques, qui transforment une proposition logique en une autre proposition logique. Elles sont données dans le fichier
+Regles.txt.
+Règles
+pR1 q
+pR2 q
+
+`
+˘
+pp1 ñ p2q ÝÑ p␣p1q _ p2
+`
+˘
+`
+˘
+p1 _ pp2 ^ p3q ÝÑ pp1 _ p2q ^ pp1 _ p3q
+pp1 _ p2q ÝÑ pp2 _ p1q
+
+pR3 q
+pR4 q
+pR5 q
+pR6 q
+pR7 q
+
+pp1 ^ p2q ÝÑ pp2 ^ p1q
+˘
+`
+˘
+␣ pp1 ^ p2q ÝÑ p␣p1q _ p␣p2q
+`
+˘
+`
+˘
+␣ pp1 _ p2q ÝÑ p␣p1q ^ p␣p2q
+`
+˘
+␣ p␣p1q ÝÑ p1
+`
+
+où ñ (implique), _ (ou), ^ (et), ␣ (non) sont les opérateurs logiques usuels
+et où ÝÑ peut se lire par « peut être réécrit comme ».
+
+1
+
+2
+
+Ce qu’il faut faire
+
+On possède aussi une proposition logique qu’on voudrait simplifier à l’aide
+des règles de réécriture données dans Regles.txt. Elle est donnée dans le fichier
+Init.txt.
+Proposition à réécrire
+´
+`
+˘¯
+pq12 ^ r5q _ p␣aq ^ c ñ pr5 ñ cq
+
+pP q
+
+2
+
+Ce qu’il faut faire
+
+2.1
+
+Contraintes
+
+
+1.
+
+Il est INTERDIT de modifier les fichiers Regles.txt et Init.txt.
+
+2. Les programmes seront écrits en langage C, les seules bibliothèques autorisées
+sont stdio, stdlib, string et regex.
+3. Le rapport (qui compte beaucoup dans la note du projet) DOIT être fourni
+en .pdf, tout autre format sera pénalisé.
+
+2.2
+
+L’analyseur lexical
+
+On produira
+1. un programme C, effectuant l’analyseur lexical dans un fichier
+analex.c ;
+2. un programme de test test_analex.c, contenant une fonction main
+et permettant de tester sur une proposition le bon comportement de
+l’analyseur lexical ;
+
+ce programme d’analyse lexicale doit être capable de détecter des
+erreurs lexicales !
+
+s’il n’y a pas d’erreur, le programme devra produire une liste (ou
+un tableau) de lexèmes, il sera donc de type
+lexeme list analyseur_lexical(char *)
+3. une explication du code (expressions régulières, automates, choix effectués, problèmes rencontrés, comment ils ont été résolus, etc.) dans
+le rapport.
+
+2
+
+2
+
+Ce qu’il faut faire
+
+Par exemple, pour la chaîne de caractère
+`
+˘
+pa21 ^ bq ñ pp␣q13q _ a21q
+l’analyseur lexical produira la liste de lexèmes
+[PO ,PO, Prop("a21"), Op("ET"), Prop("b"), PF, Op("IMPLIQUE"), PO,
+PO, OP("NON"), Prop("q13"), PF, Op("OU"), Prop("a21"), PF, PF]
+où PO désigne le lexème « parenthèse ouvrante », PF le lexème « parenthèse fermante », Prop("s") le lexème variable propositionnelle de nom s (qui peut prendre
+les valeurs Vrai ou Faux) et Op("s") désigne le lexème opérateur logique de nom
+s.
+Par exemple pour la règle R1 , l’analyseur lexical produira
+[PO, Prop("p1"), Op("IMPLIQUE"), Prop("p2"), PF, PRODUIT, PO, PO,
+Op("NON"), Prop("p1"), PF, Op("OU"), Prop("p2"), PF]
+où PRODUIT exprime le lien entre les deux expressions logiques.
+
+2.3
+
+L’analyseur syntaxique
+
+On produira
+1. un programme C, effectuant l’analyseur syntaxique dans un fichier
+anasynt.c ;
+2. un programme de test test_anasynt.c, contenant une fonction main
+et permettant de tester sur une proposition le bon comportement de
+l’analyseur syntaxique ;
+
+ce programme d’analyse syntaxique doit être capable de détecter
+des erreurs syntaxiques !
+
+s’il n’y a pas d’erreur, le programme devra produire un arbre
+syntaxique, il sera donc de type
+arbre_syntaxique analyseur_lexical(lexeme list)
+3. une explication du code (grammaire BNF, automates à pile, choix effectués, problèmes rencontrés, comment ils ont été résolus, etc.) dans
+le rapport.
+Par exemple, la liste de lexèmes obtenue par l’analyse lexicale de R1 , produira
+l’arbre syntaxique (qu’on supposera binaire)
+
+3
+
+2
+
+Ce qu’il faut faire
+
+PRODUIT
+
+Op(”IMPLIQUE”)
+
+Prop(”p1”)
+
+Op(”OU”)
+
+Prop(”p2”)
+
+Op(”NON”)
+
+Prop(”p2”)
+
+Prop(”p1”)
+
+2.4
+
+Analyse sémantique
+
+On produira
+1. un programme C, effectuant l’analyseur sémantique dans un fichier
+anasem.c ;
+2. un programme de test test_anasem.c, contenant une fonction main
+et permettant de tester sur une proposition le bon comportement de
+l’analyseur sémantique ;
+
+ce programme d’analyse sémantique doit être capable de détecter
+des erreurs sémantiques !
+
+s’il n’y a pas d’erreur, le programme devra produire un arbre
+syntaxique correct, il sera donc de type
+arbre_syntaxique analyseur_semantique(arbre_syntaxique)
+3. une explication du code (les vérifications effectuées, les problèmes rencontrés, comment ils ont été résolus, etc.) dans le rapport.
+
+2.4.1
+
+Table des symboles
+
+On codera la table des symboles comme dans le cours, de la manière suivante
+(exemple de Op("NON"), suivi de Op("OU"))
+
+Indices
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+Table
+
+0
+
+3
+
+78
+
+79
+
+78
+
+1
+
+0
+
+1
+
+2
+
+79
+
+85
+
+2
+
+2
+
+ℓ1
+
+N
+
+O
+
+N
+
+n1
+
+c1
+
+ad
+
+ℓ2
+
+O
+
+U
+
+n2
+
+c2
+
+Signification
+où
+
+— ℓ1 et ℓ2 désignent les longueurs des noms NON et OU, chaque lettre étant
+exprimée par son code ascii ;
+— n1 et n2 désignent le nombre de paramètres des fonctions concernées ;
+
+4
+
+2
+
+Ce qu’il faut faire
+
+— c1 et c2 désignent les codes Cfa où trouver les exécutables des fonctions, ils
+correspondent à un numéro dans la machine virtuelle VM ;
+— ad désigne l’adresse où commence le précédent mot (ici le mot avant OU est
+NON qui commence à l’adresse 1) ;
+— le 0 de la première case permettra de savoir que la recherche est terminée
+(et échouée, c’est-à-dire que la fonction demandée n’a pas été trouvée dans
+la table des symboles).
+2.4.2
+
+Machine virtuelle
+
+On codera la machine virtuelle comme dans le cours, de la manière suivante
+(exemple de Op("NON"), suivi de Op("OU"))
+
+Indices
+
+0
+
+1
+
+2
+
+3
+
+VM
+
+0
+
+0
+
+0
+
+1
+
+Cfa
+
+p1
+
+Cfa
+
+p2
+
+Signification
+
+où
+— 0 exprime le fait que la fonction est définie dans le processeur (donc écrit en
+C pour ce qui nous concerne) ;
+— p1 et p2 désigne le code processeur de la fonction concernée ;
+— notons que nous avons bien c1 “ 0 et c2 “ 2, comme annoncé dans la table
+des symboles ; ce sont les indices dans la machine virtuelle du début du code
+définissant la fonction.
+
+Le projet étant abrégé pour des raisons de temps, la machine virtuelle
+restera très simple, mais elle contient la possibilité de codes de nouveaux
+opérateurs logiques directement dans la machine !
+
+2.5
+2.5.1
+
+Modèle d’exécution
+Le processeur
+
+Le processeur sera défini comme un tableau de fonctions voidÝÑvoid, son code
+est
+Source C
+1
+2
+
+// Définition du processeur
+typedef void (*base)(void); // Type de la fonction de base
+
+5
+
+2
+
+Ce qu’il faut faire
+
+base processeur[50]; // Taille à préciser
+
+3
+
+Après avoir écrit une fonction Non de type voidÝÑvoid, on la placera dans le
+processeur par le code suivant
+Source C
+// Supposons la fonction Non bien définie
+// On la place dans le processeur
+processeur[0] = &Non; // p1 “ 0
+
+4
+5
+6
+
+L’utilisation se fait facilement par l’appel de la fonction !
+Source C
+// Utilisation de la fonction du processeur
+processeur[0]();
+
+7
+8
+
+On placera dans le processeur les fonctions suivantes
+processeur[0]
+processeur[1]
+processeur[2]
+processeur[3]
+
+2.5.2
+
+=
+=
+=
+=
+
+&Non;
+&Ou;
+&Et;
+&Implique;
+
+La pile
+
+Les fonctions du processeur étant voidÝÑvoid, elles doivent trouver leurs paramètres quelque part, notre système comportera une pile d’entiers, où seront les
+paramètres utiles à la bonne exécution du code proposé.
+Source C
+9
+10
+11
+12
+13
+14
+15
+
+// Un type de pile d'entiers
+typedef struct
+{
+int (*pop)(void);
+void (*push)(int);
+int (*vide)(void);
+} pile;
+
+On effectuera le codage des propositions logiques de la manière suivante.
+1. Les opérateurs logiques seront codés par leur Cfa ;
+
+6
+
+2
+
+Ce qu’il faut faire
+
+2. les paramètres (variables logiques pouvant prendre les valeurs Vrai ou Faux)
+seront numérotés négativement en commençant par ´1.
+Par exemple, le codage de la proposition donnée dans Init.txt pourra être (noté
+en postfixé)
+r´1, ´2, 4, ´3, 0, ´4, 4, 2, ´2, ´4, 6, 6s
+
+p˚q
+
+où
+1. q12 est codée par -1, r5 est codée par -2, a est codée par -3 et c par -4 (ordre
+d’apparition dans l’arbre syntaxique) ;
+2. 0 est le Cfa de NON, 2 est le Cfa de OU, 4 est le Cfa de ET et 6 est le Cfa de
+IMPLIQUE.
+On conviendra que les propositions logiques pourront être mises sur la pile
+en notation préfixée (les variables sont plus proches du sommet de la pile
+que les opérateurs). Ainsi la règle 2, pourra être considérée comme une
+opération sur la pile.
+
+-1
+-2
+-3
+4
+2
+
+∨
+
+p1
+
+∧
+
+p2
+
+2.6
+2.6.1
+
+p3
+
+R
+
+2
+ÝÝÝÝ
+ÝÑ
+
+-1
+-2
+2
+-1
+-3
+2
+4
+
+∧
+
+∨
+
+∨
+
+p1
+
+p2
+
+p1
+
+p3
+
+Compilation
+D’une proposition logique
+
+Appelons P la proposition logique donné dans le fichier Init.txt, elle pourra
+être compilée dans notre système par une écriture dans la table des symboles et
+une écriture dans la machine virtuelle.
+1. Table des symboles
+Indices
+
+x`0
+
+x`1
+
+x`2
+
+x`3
+
+x`4
+
+Table
+
+y
+
+1
+
+80
+
+4
+
+z
+
+Signification
+
+ad
+
+ℓ
+
+P
+
+n
+
+Cfa
+
+où x est l’indice de la première place libre dans la table des symboles (qui
+est un tableau), y est l’indice où commence le précédent mot défini dans la
+
+7
+
+2
+
+Ce qu’il faut faire
+
+table des symboles, z est le Cfa de la proposition P (voir la machine virtuelle
+ci-après), ℓ est la longueur de la chaîne "P", 80 est le code ascii de P, n est
+le nombre de paramètres de P .
+2. Machine virtuelle On utilise le codage p˚q obtenu page 7.
+Indices
+
+z
+
+`1 `2 `3 `4 `5 `6 `7 `8 `9 `10 `11 `12 `13
+
+VM
+
+1
+
+-1
+
+Signif.
+
+6
+
+f
+
+-2
+
+4
+
+-3
+
+0
+
+-4
+
+4
+
+2
+
+-2
+
+-4
+
+6
+
+q12 r5
+
+^
+
+a
+
+␣
+
+c
+
+^
+
+_
+
+r5
+
+c
+
+ñ ñ Cfa
+
+où le 1 à l’indice z signifie que ce n’est pas une fonction du processeur, f est
+le Cfa d’une fonction fin qui signale que la définition est terminée.
+
+Il y a donc deux manières de manipuler les propositions
+(a) en les mettant sous forme codée sur la pile (ce sont alors des
+données) ;
+(b) en les compilant dans la machine virtuelle (ce sont alors des
+fonctions).
+
+2.6.2
+
+Des règles de production
+
+Pour des raisons de temps, ce sujet ne sera hélas pas abordé. La visualisation des règles comme une modification de pile peut être traduite
+en capacité d’exécution !
+
+2.6.3
+
+Ce qu’il faut fournir pour cette étape
+
+L’objectif se limitera à la compilation des propositions logiques et à leur évaluation suivant les valeurs Vrai/Faux de leurs paramètres.
+On produira
+1. un fichier compilateur.c qui contiendra
+— les définitions des opérateurs ET, NON, OU, IMPLIQUE dans ce
+contexte d’évaluation par des fonctions C qui seront appelées respectivement Et, Non, Ou, Implique et qui seront placées dans le
+processeur ;
+— la compilation des ces opérateurs dans les table des symboles et
+machine virtuelle ;
+
+8
+
+3
+
+Rappels
+
+
+il faut faire cette étape lors de l’analyse sémantique pour que
+celle-ci puisse vérifier que tous les opérateurs sont bien définis et
+ont le bon nombre de paramètres ;
+— la compilation des propositions logiques à partir des arbres syntaxiques ;
+2. un fichier test_compilateur.c contenant une fonction main permettant de saisir une chaîne de caractère et de la compiler dans la machine
+virtuelle ;
+3. une explication des choix effectués et des problèmes rencontrés dans
+le rapport.
+
+2.7
+
+Exécution
+
+Proposer un modèle d’exécution permettant, en n’utilisant que la machine
+virtuelle d’exécuter convenablement le code C qui suit. On produira
+1. un fichier runtime.c définissant le code qui utilise la machine virtuelle ;
+2. un fichier test_runtime.c contenant une fonction main, pour tester
+le code précédent ;
+3. des commentaires expliquant le fonctionnement, les choix effectués et
+les problèmes rencontrés pour le code proposé.
+Source C
+900
+901
+902
+903
+904
+905
+
+906
+
+3
+
+// Vrai sera codé en ´1 et Faux en 0
+Mapile.push(-1); // q12
+Mapile.push(-1); // r5
+Mapile.push(0); // a
+Mapile.push(0) ;// c
+Execute(ad); // où ad est le Cfa de la proposition P
+ãÑ
+définie dans Init.txt
+printf("Le résultat est %d : \n", Mapile.pop());
+
+Rappels
+1. Les codes C doivent être bien écrits et bien commentés, ils ne doivent pas être
+générés par un quelconque outil ;
+
+9
+
+3
+
+Rappels
+
+2. les codes C doivent pouvoir être compilés sans erreur et sans warnings, la
+commande de référence est gcc -Wall fichier.c ;
+3. le rapport doit être fourni en .pdf ;
+4. l’archive contenant tous les fichiers (sans répertoire !) doit être au format
+.zip ;
+5. tout retard sera pénalisé ainsi que tout non-respect des contraintes qui ont
+été énoncées dans ce document ;
+6. toute tricherie (recopiage de code, utilisation de générateurs de codes, ...) sera
+sévèrement punie !
+7. Il en revanche possible de discuter entre vous des solutions, mais les réalisations doivent rester personnelles au niveau du groupe !
+Un projet raisonnablement travaillé et respectant les consignes aura une
+bonne note, même si certains points n’ont pas pu être menés à conclusion (en
+ce cas, bien expliquer dans le rapport les essais pour résoudre les problèmes
+rencontrés).
+
+10
+
+
