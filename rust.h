@@ -13,11 +13,13 @@ int is_alpha(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
+// not rust style
 int is_space(char c) {
-    return c == ' ' || c == '\t';
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' || c == '\f';
 }
 
 // [deprecated, containers]
+/*
 #define GENERATE_VECTOR_OF(type, name) \
     typedef struct { \
         type* data; \
@@ -71,5 +73,6 @@ int is_space(char c) {
 
 GENERATE_VECTOR_OF(int, VectorInt)
 GENERATE_VECTOR_OF(char, VectorChar)
+*/
 
 #endif
