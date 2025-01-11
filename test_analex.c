@@ -1,32 +1,78 @@
+#include "analex.h"
+
+#include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-typedef enum { PO, PF, PROP, OP } LexemeType;
-
-typedef struct {
-    LexemeType type;
-    char value[10];
-} Lexeme;
-
-typedef struct {
-    Lexeme* items;
-    int size;
-    int capacity;
-} LexemeList;
-
-LexemeList init_lexeme_list() {
-    LexemeList list;
-    list.size = 0;
-    list.capacity = 10;
-    list.items = (Lexeme*)malloc(list.capacity * sizeof(Lexeme));
-    return list;
+void test_init_lexeme_list() {
+    Vector* list = init_lexeme_list();
+    assert(list != NULL);
+    assert(list->size == 0);
+    assert(list->capacity > 0);
+    destroy_lexeme_list(list);
+    printf("test_init_lexeme_list passed\n");
 }
 
-void add_lexeme(LexemeList* list, Lexeme lexeme) {
-    if (list->size == list->capacity) {
-        list->capacity *= 2; // just like vector
-        list->items = (Lexeme*)realloc(list->items, list->capacity * sizeof(Lexeme));
+void test_add_lexeme() {
+    Vector* list = init_lexeme_list();
+    Lexeme lexeme = { PO, "example" };
+    add_lexeme(list, lexeme);
+    assert(list->size == 1);
+    Lexeme* retrieved_lexeme = (Lexeme*)vector_get(list, 0);
+    assert(retrieved_lexeme->type == PO);
+    assert(strcmp(retrieved_lexeme->value, "example") == 0);
+    destroy_lexeme_list(list);
+    printf("test_add_lexeme passed\n");
+}
+
+void test_print_lexemes() {
+    Vector* list = init_lexeme_list();
+    Lexeme lexeme1 = { PO, "example1" };
+    Lexeme lexeme2 = { PF, "example2" };
+    add_lexeme(list, lexeme1);
+    add_lexeme(list, lexeme2);
+    printf("Expected output: PO PF\nActual output: ");
+    print_lexemes(list);
+    destroy_lexeme_list(list);
+    printf("test_print_lexemes passed\n");
+}
+
+void test_destroy_lexeme_list() {
+    Vector* list = init_lexeme_list();
+    destroy_lexeme_list(list);
+    printf("test_destroy_lexeme_list passed\n");
+}
+
+void test_read_lexeme(char* filename) {
+    FILE* file = fopen(filename, "r");
+    // read a line
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        printf("---\n");
+        printf("%s", line);
+        LexicalResult res = analyseur_lexical(line);
+        if (res.type == ERR) {
+            printf("Error: %s\n", res.error);
+        } else {
+            print_lexemes(res.value);
+        }
     }
-    list->items[list->size++] = lexeme;
+}
+
+void test_illegal() {
+    char* input = "a b c";
+    LexicalResult res = analyseur_lexical(input);
+    assert(res.type == ERR);
+    printf(res.error);
+}
+
+int main() {
+    test_init_lexeme_list();
+    test_add_lexeme();
+    test_print_lexemes();
+    test_destroy_lexeme_list();
+    test_read_lexeme("assets/Init.txt");
+    test_read_lexeme("assets/Regles.txt");
+    printf("All tests passed\n");
+    return 0;
 }
