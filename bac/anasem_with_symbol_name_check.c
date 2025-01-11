@@ -44,39 +44,39 @@ SemanticResult check_semantics(SyntaxNode* node, Vector* symbols_table) {
         return result;
     }
 
-    // if (node->lexeme.type == LEX_PROP) {
-    //     // check if the symbol is in the table
-    //     // symbol is
-    //     int found = 0;
-    //     int cur = *(int*)vector_get(symbols_table, symbols_table->size - 1);
-    //     while (cur != 0) {
-    //         const int len = *(int*)vector_get(symbols_table, cur);
-    //         char symbol[SYMBOL_LENGTH];
-    //         for (int i = 1; i <= len; i++) {
-    //             symbol[i - 1] = (char)*(int*)vector_get(symbols_table, cur + i);
-    //         }
-    //         symbol[len] = '\0';
-    //         if (strcmp(symbol, node->lexeme.value) == 0) {
-    //             found = 1;
-    //             break;
-    //         }
-    //         cur = *(int*)vector_get(symbols_table, cur - 1);
-    //     }
-    //     if (!found) {
-    //         // add this to the table
-    //         const int start_idx = symbols_table->size;
+    if (node->lexeme.type == LEX_PROP) {
+        // check if the symbol is in the table
+        // symbol is
+        int found = 0;
+        int cur = *(int*)vector_get(symbols_table, symbols_table->size - 1);
+        while (cur != 0) {
+            const int len = *(int*)vector_get(symbols_table, cur);
+            char symbol[SYMBOL_LENGTH];
+            for (int i = 1; i <= len; i++) {
+                symbol[i - 1] = (char)*(int*)vector_get(symbols_table, cur + i);
+            }
+            symbol[len] = '\0';
+            if (strcmp(symbol, node->lexeme.value) == 0) {
+                found = 1;
+                break;
+            }
+            cur = *(int*)vector_get(symbols_table, cur - 1);
+        }
+        if (!found) {
+            // add this to the table
+            const int start_idx = symbols_table->size;
 
-    //         const int len = strlen(node->lexeme.value);
-    //         vector_push_back(symbols_table, &len);
-    //         for (int i = 0; i < len; i++) {
-    //             int c = node->lexeme.value[i];
-    //             vector_push_back(symbols_table, &c);
-    //         }
+            const int len = strlen(node->lexeme.value);
+            vector_push_back(symbols_table, &len);
+            for (int i = 0; i < len; i++) {
+                int c = node->lexeme.value[i];
+                vector_push_back(symbols_table, &c);
+            }
 
-    //         // at last put a idx to the last symbol
-    //         vector_push_back(symbols_table, &start_idx);
-    //     }
-    // }
+            // at last put a idx to the last symbol
+            vector_push_back(symbols_table, &start_idx);
+        }
+    }
 
     if (node->left) {
         SemanticResult left_res = check_semantics(node->left);

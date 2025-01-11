@@ -1,3 +1,6 @@
+#ifndef ANASYNT_H
+#define ANASYNT_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -38,3 +41,5 @@ ParseResult parse_and_expr(Vector* lexeme_list, size_t* index);
 ParseResult parse_unary_expr(Vector* lexeme_list, size_t* index);
 ParseResult parse_primary_expr(Vector* lexeme_list, size_t* index);
 void destroy_syntax_tree(SyntaxNode* node);
+
+#endif

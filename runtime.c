@@ -14,6 +14,4 @@ int Implique(int x, int y) {
     return !x || y;
 }
 
-void Fin() {
-    exit(0);
-}
+void Fin() {}

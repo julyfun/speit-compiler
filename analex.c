@@ -168,7 +168,7 @@ LexicalResult analyseur_lexical(char* input) {
     }
     if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
         LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-        sprintf(res.error, "Invalid identifier %s at position %d", buffer, strlen(input));
+        sprintf(res.error, "Invalid identifier %s at position %zu", buffer, strlen(input));
         return res;
     }
     return (LexicalResult) { LEX_OK, .value = lexeme_list };

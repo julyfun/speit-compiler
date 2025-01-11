@@ -1,13 +1,7 @@
 #ifndef ANASEM_H
 #define ANASEM_H
 
-typedef struct {
-    enum { SYNTAX_OK, SYNTAX_ERR } type;
-    union {
-        SyntaxNode* value;
-        char error[MSG_LENGTH];
-    };
-} SyntaxResult;
+#include "anasynt.h"
 
 typedef struct {
     enum { SEMANTIC_OK, SEMANTIC_ERR } type;
@@ -17,6 +11,6 @@ typedef struct {
     };
 } SemanticResult;
 
-SemanticResult analyseur_semantique(Vector* lexeme_list);
+SemanticResult analyseur_semantique(SyntaxNode* node);
 
 #endif

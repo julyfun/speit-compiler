@@ -6,21 +6,20 @@
 
 // Op and Prop allowed.
 
-SemanticResult analyseur_semantique(Vector* lexeme_list) {
-    size_t index = 0;
-    ParseResult res = parse_expr(lexeme_list, &index);
-    if (res.type == PARSE_ERR) {
-        SemanticResult result = (SemanticResult) { SEMANTIC_ERR, .error = "" };
-        sprintf(result.error, "Syntax error: %s", res.error);
-        return result;
-    }
+SemanticResult check_semantics(SyntaxNode* node);
+
+SemanticResult analyseur_semantique(SyntaxNode* node) {
+    // [own]
+    // - node
+
     // go through the tree and check the semantics
-    SemanticResult sem_res = check_semantics(res.value);
+    SemanticResult sem_res = check_semantics(node);
     if (sem_res.type == SEMANTIC_ERR) {
-        destroy_syntax_tree(res.value);
+        destroy_syntax_tree(node);
         return sem_res;
     }
     // add this to symbols table
+    return (SemanticResult) { SEMANTIC_OK, .value = node };
 }
 
 // PRODUIT is not allowed.
