@@ -123,7 +123,7 @@ ParseResult parse_rule(Vector* lexeme_list, size_t* index) {
     if (*index >= lexeme_list->size) {
         destroy_syntax_tree(res.value);
         *index = start_index;
-        return (ParseResult) { PARSE_ERR, .error = "Syntax error: Expected '→'" };
+        return (ParseResult) { PARSE_ERR, .error = "Syntax error: Unexpected end of input" };
     }
     Lexeme* lexeme = (Lexeme*)vector_get(lexeme_list, *index);
     if (lexeme->type != LEX_PRODUIT) {
