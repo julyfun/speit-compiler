@@ -11,7 +11,7 @@ SemanticResult analyseur_semantique(Vector* lexeme_list, Vector* symbols_table) 
     ParseResult res = parse_expr(lexeme_list, &index);
     if (res.type == PARSE_ERR) {
         SemanticResult result = (SemanticResult) { SEMANTIC_ERR, .error = "" };
-        sprintf(result.error, "Syntax error: %s", res.error);
+        sprintf(result.error, "%s", res.error);
         return result;
     }
     // go through the tree and check the semantics

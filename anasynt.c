@@ -125,13 +125,13 @@ ParseResult parse_rule(Vector* lexeme_list, size_t* index) {
     if (*index >= lexeme_list->size) {
         destroy_syntax_tree(res.value);
         *index = start_index;
-        return (ParseResult) { PARSE_ERR, .error = "Expected '→'" };
+        return (ParseResult) { PARSE_ERR, .error = "Syntax error: Expected '→'" };
     }
     Lexeme* lexeme = (Lexeme*)vector_get(lexeme_list, *index);
     if (lexeme->type != LEX_PRODUIT) {
         destroy_syntax_tree(res.value);
         *index = start_index;
-        return (ParseResult) { PARSE_ERR, .error = "Expected '→'" };
+        return (ParseResult) { PARSE_ERR, .error = "Syntax error: Expected '→'" };
     }
     (*index)++;
     ParseResult right_res = parse_arrow_expr(lexeme_list, index);
@@ -162,7 +162,7 @@ ParseResult parse_and_expr(Vector* lexeme_list, size_t* index) {
 ParseResult parse_unary_expr(Vector* lexeme_list, size_t* index) {
     if (*index >= lexeme_list->size) {
         ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };
-        sprintf(res.error, "Unexpected end of input at position %zu", *index);
+        sprintf(res.error, "Syntax error: Unexpected end of input at position %zu", *index);
         return res;
     }
     Lexeme* lexeme = (Lexeme*)vector_get(lexeme_list, *index);
@@ -185,7 +185,7 @@ ParseResult parse_unary_expr(Vector* lexeme_list, size_t* index) {
 ParseResult parse_primary_expr(Vector* lexeme_list, size_t* index) {
     if (*index >= lexeme_list->size) {
         ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };
-        sprintf(res.error, "Unexpected end of input at position %zu", *index);
+        sprintf(res.error, "Syntax error: Unexpected end of input at position %zu", *index);
         return res;
     }
     Lexeme* lexeme = (Lexeme*)vector_get(lexeme_list, *index);
@@ -209,14 +209,14 @@ ParseResult parse_primary_expr(Vector* lexeme_list, size_t* index) {
         {
             destroy_syntax_tree(res.value);
             ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };
-            sprintf(res.error, "Expected ')' at position %zu", *index);
+            sprintf(res.error, "Syntax error: Expected ')' at position %zu", *index);
             return res;
         }
         (*index)++;
         return res;
     }
     ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };
-    sprintf(res.error, "Unexpected lexeme at position %zu", *index);
+    sprintf(res.error, "Syntax error: Unexpected lexeme at position %zu", *index);
     return res;
 }
 

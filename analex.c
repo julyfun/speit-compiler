@@ -59,6 +59,7 @@ typedef enum {
 TryAddResult try_add_buffer_as_prop(Vector* lexeme_list, char* buffer, int* buffer_index) {
     if (*buffer_index > 0) {
         // word in buffer not <id>? use regex
+        buffer[*buffer_index] = '\0';
         regex_t regex;
         int reti = regcomp(&regex, "^[a-zA-Z][a-zA-Z0-9]*$", 0);
         reti = regexec(&regex, buffer, 0, NULL, 0);
@@ -100,7 +101,12 @@ LexicalResult analyseur_lexical(char* input) {
         if (is_space(input[i])) {
             if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
                 LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-                sprintf(res.error, "Invalid identifier %s at position %d", buffer, i);
+                sprintf(
+                    res.error,
+                    "Lexical error: Invalid identifier \"%s\" at position %d",
+                    buffer,
+                    i
+                );
                 return res;
             }
             i++;
@@ -113,7 +119,12 @@ LexicalResult analyseur_lexical(char* input) {
         }
         if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
             LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-            sprintf(res.error, "Invalid identifier %s at position %d", buffer, i);
+            sprintf(
+                res.error,
+                "Lexical error: Invalid identifier \"%s\" at position %d",
+                buffer,
+                i
+            );
             return res;
         }
 
@@ -140,7 +151,12 @@ LexicalResult analyseur_lexical(char* input) {
                 continue;
             }
             LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-            sprintf(res.error, "Invalid UTF-8 character %d at position %d", (int)input[i], i);
+            sprintf(
+                res.error,
+                "Lexical error: Invalid UTF-8 character \"%x\" at position %d",
+                (int)input[i],
+                i
+            );
             return res;
         }
         if (input[i] == '(') {
@@ -159,7 +175,7 @@ LexicalResult analyseur_lexical(char* input) {
         LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
         sprintf(
             res.error,
-            "Invalid character %c (ascii %d) at position %d",
+            "Lexical error: Invalid character \"%c\" (ascii %x) at position %d",
             input[i],
             (int)input[i],
             i
@@ -168,7 +184,12 @@ LexicalResult analyseur_lexical(char* input) {
     }
     if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
         LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-        sprintf(res.error, "Invalid identifier %s at position %zu", buffer, strlen(input));
+        sprintf(
+            res.error,
+            "Lexical error: Invalid identifier \"%s\" at position %zu",
+            buffer,
+            strlen(input)
+        );
         return res;
     }
     return (LexicalResult) { LEX_OK, .value = lexeme_list };

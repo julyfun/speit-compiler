@@ -89,7 +89,7 @@ void test4() {
     size_t index = 0;
     ParseResult res = parse_expr(lexeme_list, &index);
     if (res.type == PARSE_ERR) {
-        printf("Error: %s\n", res.error);
+        printf("%s\n", res.error);
         return;
     }
     Vector* stack_is_last_son = vector_new(sizeof(int));
@@ -105,14 +105,14 @@ void test_read_lexeme(char* filename) {
         printf("%s", line);
         LexicalResult res = analyseur_lexical(line);
         if (res.type == LEX_ERR) {
-            printf("Error: %s\n", res.error);
+            printf("%s\n", res.error);
             continue;
         }
         print_lexemes(res.value);
         size_t index = 0;
         ParseResult parse_res = parse_expr(res.value, &index);
         if (parse_res.type == PARSE_ERR) {
-            printf("Error: %s\n", parse_res.error);
+            printf("%s\n", parse_res.error);
             continue;
         }
         Vector* stack_is_last_son = vector_new(sizeof(int));

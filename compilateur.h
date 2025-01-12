@@ -6,7 +6,14 @@
 
 typedef void (*Builtin)(void);
 
-void add_builtin(Vector* sym_tb, Vector* vm, Builtin func, int param_num, const char* name);
+void add_builtin(
+    Vector* sym_tb,
+    Vector* vm,
+    Vector* processeur,
+    Builtin func,
+    int param_num,
+    const char* name
+);
 
 typedef struct {
     Vector* vm;
