@@ -1,5 +1,6 @@
 #include "analex.h"
 
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,14 +48,34 @@ void destroy_lexeme_list(Vector* list) {
     vector_destroy(list);
 }
 
-void try_add_buffer_as_lexeme(Vector* lexeme_list, char* buffer, int* buffer_index) {
+// <digit> ::= "0" | ... | "9"
+// <letter> ::= "a" | ... | "z"
+// <id> ::= <lettre> { <lettre> | <chiffre> }
+typedef enum {
+    TRY_ADD_OK,
+    TRY_ADD_NOT_ID,
+} TryAddResult;
+
+TryAddResult try_add_buffer_as_prop(Vector* lexeme_list, char* buffer, int* buffer_index) {
     if (*buffer_index > 0) {
+        // word in buffer not <id>? use regex
+        buffer[*buffer_index] = '\0';
+        regex_t regex;
+        int reti = regcomp(&regex, "^[a-zA-Z][a-zA-Z0-9]*$", 0);
+        reti = regexec(&regex, buffer, 0, NULL, 0);
+        regfree(&regex);
+        if (reti != 0) {
+            return TRY_ADD_NOT_ID;
+        }
+
         buffer[*buffer_index] = '\0';
         Lexeme lexeme = { LEX_PROP, "" }; // adding new one
         strcpy(lexeme.value, buffer);
         add_lexeme(lexeme_list, lexeme);
         *buffer_index = 0;
+        return TRY_ADD_OK;
     }
+    return TRY_ADD_OK;
 }
 
 typedef struct {
@@ -78,7 +99,16 @@ LexicalResult analyseur_lexical(char* input) {
     int buffer_index = 0;
     for (int i = 0; input[i] != '\0';) {
         if (is_space(input[i])) {
-            try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
+            if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
+                LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
+                sprintf(
+                    res.error,
+                    "Lexical error: Invalid identifier \"%s\" at position %d",
+                    buffer,
+                    i
+                );
+                return res;
+            }
             i++;
             continue;
         }
@@ -87,7 +117,16 @@ LexicalResult analyseur_lexical(char* input) {
             i++;
             continue;
         }
-        try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
+        if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
+            LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
+            sprintf(
+                res.error,
+                "Lexical error: Invalid identifier \"%s\" at position %d",
+                buffer,
+                i
+            );
+            return res;
+        }
 
         // check if the current character is a UTF-8 character
         if (input[i] == (char)0xE2 || input[i] == (char)0xC2) {
@@ -112,7 +151,12 @@ LexicalResult analyseur_lexical(char* input) {
                 continue;
             }
             LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
-            sprintf(res.error, "Invalid UTF-8 character %d at position %d", (int)input[i], i);
+            sprintf(
+                res.error,
+                "Lexical error: Invalid UTF-8 character \"%x\" at position %d",
+                (int)input[i],
+                i
+            );
             return res;
         }
         if (input[i] == '(') {
@@ -131,13 +175,22 @@ LexicalResult analyseur_lexical(char* input) {
         LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
         sprintf(
             res.error,
-            "Invalid character %c (ascii %d) at position %d",
+            "Lexical error: Invalid character \"%c\" (ascii %x) at position %d",
             input[i],
             (int)input[i],
             i
         );
         return res;
     }
-    try_add_buffer_as_lexeme(lexeme_list, buffer, &buffer_index);
+    if (try_add_buffer_as_prop(lexeme_list, buffer, &buffer_index) == TRY_ADD_NOT_ID) {
+        LexicalResult res = (LexicalResult) { LEX_ERR, .error = "" };
+        sprintf(
+            res.error,
+            "Lexical error: Invalid identifier \"%s\" at position %zu",
+            buffer,
+            strlen(input)
+        );
+        return res;
+    }
     return (LexicalResult) { LEX_OK, .value = lexeme_list };
 }

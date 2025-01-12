@@ -52,7 +52,7 @@ void test_read_lexeme(char* filename) {
         printf("%s", line);
         LexicalResult res = analyseur_lexical(line);
         if (res.type == LEX_ERR) {
-            printf("Error: %s\n", res.error);
+            printf("%s\n", res.error);
         } else {
             print_lexemes(res.value);
         }
@@ -67,6 +67,14 @@ void test_illegal() {
     puts("");
 }
 
+void test_illegal_id() {
+    char* input = "a1→1b";
+    LexicalResult res = analyseur_lexical(input);
+    assert(res.type == LEX_ERR);
+    printf("%s", res.error);
+    puts("");
+}
+
 int main() {
     test_init_lexeme_list();
     test_add_lexeme();
@@ -75,6 +83,7 @@ int main() {
     test_read_lexeme("assets/Init.txt");
     test_read_lexeme("assets/Regles.txt");
     test_illegal();
+    test_illegal_id();
     printf("All tests passed\n");
     return 0;
 }

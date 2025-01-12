@@ -3,5 +3,9 @@
 
 enum {
     MSG_LENGTH = 128,
+    SYMBOL_LENGTH = 32,
+    SYMBOL_TABLE_SIZE = 1 << 12,
+    BUILTIN_FUNCTION_FLAG = 0,
+    EXTERN_FUNCTION_FLAG = 1,
 };
 #endif // CONSTANTS_H
