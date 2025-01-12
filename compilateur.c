@@ -132,7 +132,7 @@ compile_add_func(char* input, Vector* virtual_machine, Vector* symbol_table, cha
     }
 
     // [debug]
-    print_syntax_tree(sem_res.value, 0, vector_new(sizeof(int)));
+    // print_syntax_tree(sem_res.value, 0, vector_new(sizeof(int)));
 
     const int vm_addr = virtual_machine->size;
     const int sym_tb_start_idx = symbol_table->size;

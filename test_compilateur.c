@@ -3,6 +3,11 @@
 #include "rust.h"
 
 void test_vm_and_tb(char* filename) {
+    printf("---\nfilename: ");
+    for (size_t i = 0; i < strlen(filename); i++) {
+        printf("%c", filename[i]);
+    }
+    puts("");
     CompileResult res = compile(filename);
     if (res.type == COMPILE_ERR) {
         printf("%s\n", res.error);
