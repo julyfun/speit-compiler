@@ -33,6 +33,7 @@ typedef struct {
 
 // Function prototypes
 void print_syntax_tree(SyntaxNode* node, int indent, Vector* stack_is_last_son);
+ParseResult analyseur_syntaxique(Vector* lexeme_list);
 ParseResult parse_expr(Vector* lexeme_list, size_t* index);
 ParseResult parse_rule(Vector* lexeme_list, size_t* index);
 ParseResult parse_arrow_expr(Vector* lexeme_list, size_t* index);

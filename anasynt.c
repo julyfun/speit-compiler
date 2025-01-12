@@ -104,6 +104,21 @@ ParseResult parse_binary_op_expr(
 
 // [grounded parse funcs]
 
+ParseResult analyseur_syntaxique(Vector* lexeme_list) {
+    size_t index = 0;
+    ParseResult res = parse_expr(lexeme_list, &index);
+    if (res.type == PARSE_ERR) {
+        return res;
+    }
+    if (index < lexeme_list->size) {
+        destroy_syntax_tree(res.value);
+        ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };
+        sprintf(res.error, "Syntax error: Unexpected lexeme at position %zu", index);
+        return res;
+    }
+    return res;
+}
+
 // expr ::= rule | arrow_expr
 ParseResult parse_expr(Vector* lexeme_list, size_t* index) {
     ParseResult res = parse_rule(lexeme_list, index);

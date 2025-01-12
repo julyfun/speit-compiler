@@ -8,8 +8,7 @@ void test1() {
     add_lexeme(lexeme_list, lexeme1);
     add_lexeme(lexeme_list, lexeme2);
     add_lexeme(lexeme_list, lexeme3);
-    size_t index = 0;
-    ParseResult res = parse_expr(lexeme_list, &index);
+    ParseResult res = analyseur_syntaxique(lexeme_list);
     // assert(res.type == PARSE_OK);
     Vector* stack_is_last_son = vector_new(sizeof(int));
     print_syntax_tree(res.value, 0, stack_is_last_son);
@@ -24,8 +23,7 @@ void test2() {
     add_lexeme(lexeme_list, (Lexeme) { LEX_PROP, "c" });
     add_lexeme(lexeme_list, (Lexeme) { LEX_OP, "IMPLIQUE" });
     add_lexeme(lexeme_list, (Lexeme) { LEX_PROP, "d" });
-    size_t index = 0;
-    ParseResult res = parse_expr(lexeme_list, &index);
+    ParseResult res = analyseur_syntaxique(lexeme_list);
     // assert(res.type == PARSE_OK);
     Vector* stack_is_last_son = vector_new(sizeof(int));
     print_syntax_tree(res.value, 0, stack_is_last_son);
@@ -48,8 +46,7 @@ void test3() {
     add_lexeme(lexeme_list, (Lexeme) { LEX_PROP, "c" });
     add_lexeme(lexeme_list, (Lexeme) { LEX_OP, "IMPLIQUE" });
     add_lexeme(lexeme_list, (Lexeme) { LEX_PROP, "d" });
-    size_t index = 0;
-    ParseResult res = parse_expr(lexeme_list, &index);
+    ParseResult res = analyseur_syntaxique(lexeme_list);
     // assert(res.type == PARSE_OK);
     Vector* stack_is_last_son = vector_new(sizeof(int));
     print_syntax_tree(res.value, 0, stack_is_last_son);
@@ -86,8 +83,7 @@ void test4() {
     add_lexeme(lexeme_list, (Lexeme) { LEX_PF });
     print_lexemes(lexeme_list);
 
-    size_t index = 0;
-    ParseResult res = parse_expr(lexeme_list, &index);
+    ParseResult res = analyseur_syntaxique(lexeme_list);
     if (res.type == PARSE_ERR) {
         printf("%s\n", res.error);
         return;
@@ -102,20 +98,21 @@ void test_read_lexeme(char* filename) {
     char line[256];
     while (fgets(line, sizeof(line), file)) {
         printf("---\n");
-        printf("%s", line);
+        printf("Input: %s", line);
         LexicalResult res = analyseur_lexical(line);
         if (res.type == LEX_ERR) {
             printf("%s\n", res.error);
             continue;
         }
+        printf("Lexical analysis:\n");
         print_lexemes(res.value);
-        size_t index = 0;
-        ParseResult parse_res = parse_expr(res.value, &index);
+        ParseResult parse_res = analyseur_syntaxique(res.value);
         if (parse_res.type == PARSE_ERR) {
             printf("%s\n", parse_res.error);
             continue;
         }
         Vector* stack_is_last_son = vector_new(sizeof(int));
+        printf("AST:\n");
         print_syntax_tree(parse_res.value, 0, stack_is_last_son);
     }
 }
@@ -127,5 +124,6 @@ int main() {
     test4();
     test_read_lexeme("assets/Init.txt");
     test_read_lexeme("assets/Regles.txt");
+    test_read_lexeme("assets/syntax_error.txt");
     return 0;
 }
