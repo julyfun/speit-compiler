@@ -36,7 +36,7 @@ void add_builtin(
 }
 
 int get_func_addr_from_symbol_table(char* func_name, Vector* symbol_table) {
-    int op_addr = 0;
+    int op_addr = -1;
     int cur = *(int*)vector_get(symbol_table, symbol_table->size - 1);
     while (cur != 0) {
         const int symbol_len = *(int*)vector_get(symbol_table, cur);
@@ -81,6 +81,7 @@ CompileResult compile(char* input) {
         return result;
     }
 
+    // [debug]
     print_syntax_tree(sem_res.value, 0, vector_new(sizeof(int)));
 
     Vector* symbol_table = vector_new(sizeof(int));
@@ -137,7 +138,7 @@ void dfs_get_vm_func(
     } else if (node->lexeme.type == LEX_OP) {
         // must be found in table. There are only 4 builtin functions
         int op_addr = get_func_addr_from_symbol_table(node->lexeme.value, symbol_table);
-        if (!op_addr) {
+        if (op_addr == -1) {
             // something went wrong
             fprintf(
                 stderr,
