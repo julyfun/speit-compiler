@@ -5,6 +5,7 @@ gcc -Wall test_analex.c analex.c vector.c -o 1 && ./1
 gcc -Wall anasynt.c analex.c vector.c test_anasynt.c -o 1 && ./1
 gcc -Wall anasynt.c analex.c vector.c anasem.c test_anasem.c -o 1 && ./1
 gcc -Wall compilateur.c analex.c vector.c anasynt.c anasem.c runtime.c test_compilateur.c -o 1 && ./1
+gcc -Wall compilateur.c analex.c vector.c anasynt.c anasem.c runtime.c test_runtime.c -o 1 && ./1
 ```
 
 ## TODO

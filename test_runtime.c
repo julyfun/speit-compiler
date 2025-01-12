@@ -12,7 +12,8 @@ void test_runtime(char* filename, char* main_func_name, Vector* params) {
     Vector* sym_tb = res.value.sym_tb;
     Vector* processeur = res.value.processeur;
 
-    print_vm_and_sym_tb(vm, sym_tb);
+    // [debug]
+    // print_vm_and_sym_tb(vm, sym_tb);
 
     Vector* mem = vector_new(sizeof(int));
     for (int i = params->size - 1; i >= 0; i--) {
