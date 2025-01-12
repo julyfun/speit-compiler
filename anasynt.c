@@ -62,13 +62,11 @@ void print_syntax_tree(SyntaxNode* node, int level, Vector* stack_is_last_son) {
             printf("PRODUIT\n");
             break;
     }
-    int value = node->right == NULL;
-    vector_push_back(stack_is_last_son, &value);
+    vector_push_back(stack_is_last_son, &(int) { node->right == NULL });
     print_syntax_tree(node->left, level + 1, stack_is_last_son);
     vector_pop_back(stack_is_last_son);
 
-    value = 1;
-    vector_push_back(stack_is_last_son, &value);
+    vector_push_back(stack_is_last_son, &(int) { 1 });
     print_syntax_tree(node->right, level + 1, stack_is_last_son);
     vector_pop_back(stack_is_last_son);
 }
