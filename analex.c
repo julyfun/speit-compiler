@@ -79,12 +79,11 @@ TryAddResult try_add_buffer_as_prop(Vector* lexeme_list, char* buffer, int* buff
 }
 
 typedef struct {
-    const char* name; // Unicode 名称
-    const char bytes[4]; // UTF-8 编码字节
-    size_t length; // 字节长度
+    const char* name; // Unicode name
+    const char bytes[4]; // UTF-8 bytes
+    size_t length;
 } Utf8Char;
 
-// 定义需要匹配的字符
 Utf8Char UTF8_CHARS[] = {
     { "IMPLIQUE", { (char)0xE2, (char)0x87, (char)0x92 }, 3 }, // ⇒
     { "PRODUIT", { (char)0xE2, (char)0x86, (char)0x92 }, 3 }, // →
