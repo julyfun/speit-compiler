@@ -72,7 +72,7 @@ void execute(int vm_addr, Vector* vm, Vector* sym_tb, Vector* mem, Vector* proce
         const int vm_data = *(int*)vector_get(vm, vm_addr);
         if (vm_data < 0) {
             // param is reversely stacked here
-            // vm_data = -1 => reg_pos - param_num - 1 + 1
+            // vm_data = -1 => (reg_pos - param_num - 1 + 1) which is the first param
             // real_value = 1 for true, 0 for false (as designated in Projet.pdf)
             const int real_value =
                 -*(int*)vector_get(mem, reg_pos - sym_info.param_num - 1 - vm_data);
