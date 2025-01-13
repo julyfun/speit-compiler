@@ -27,8 +27,8 @@ void test_read_lexeme(char* filename) {
 }
 
 int main() {
-    test_read_lexeme("assets/Init.txt");
-    test_read_lexeme("assets/Regles.txt");
-    test_read_lexeme("assets/syntax_error.txt");
+    test_read_lexeme("Init.txt");
+    test_read_lexeme("Regles.txt");
+    test_read_lexeme("syntax_error.txt");
     return 0;
 }

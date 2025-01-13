@@ -82,8 +82,8 @@ int main() {
     test_add_lexeme();
     test_print_lexemes();
     test_destroy_lexeme_list();
-    test_read_lexeme("assets/Init.txt");
-    test_read_lexeme("assets/Regles.txt");
+    test_read_lexeme("Init.txt");
+    test_read_lexeme("Regles.txt");
     test_illegal();
     test_illegal_id();
     printf("All tests passed\n");

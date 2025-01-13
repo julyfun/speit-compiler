@@ -19,8 +19,8 @@ void test_vm_and_tb(char* filename) {
 }
 
 int main() {
-    test_vm_and_tb("assets/simple.txt");
-    test_vm_and_tb("assets/Init.txt");
-    test_vm_and_tb("assets/Regles.txt");
+    test_vm_and_tb("simple.txt");
+    test_vm_and_tb("Init.txt");
+    test_vm_and_tb("Regles.txt");
     return 0;
 }

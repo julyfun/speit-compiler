@@ -45,8 +45,8 @@ int main() {
         vector_push_back(params, &(int) { 0 });
         vector_push_back(params, &(int) { 0 });
         vector_push_back(params, &(int) { 0 });
-        // test_runtime("assets/simple.txt", "P1", params);
-        test_runtime("assets/Init.txt", "P0", params);
+        // test_runtime("simple.txt", "P1", params);
+        test_runtime("Init.txt", "P0", params);
         vector_destroy(params);
     }
 
@@ -54,7 +54,7 @@ int main() {
         Vector* params2 = vector_new(sizeof(int));
         vector_push_back(params2, &(int) { -1 });
         vector_push_back(params2, &(int) { 0 });
-        test_runtime("assets/simple.txt", "P1", params2);
+        test_runtime("simple.txt", "P1", params2);
         vector_destroy(params2);
     }
     return 0;
