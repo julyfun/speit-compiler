@@ -40,22 +40,31 @@ void test_runtime(char* filename, char* main_func_name, Vector* params) {
 
 int main() {
     {
-        Vector* params = vector_new(sizeof(int));
-        vector_push_back(params, &(int) { -1 });
-        vector_push_back(params, &(int) { 0 });
-        vector_push_back(params, &(int) { 0 });
-        vector_push_back(params, &(int) { 0 });
-        // test_runtime("simple.txt", "P1", params);
-        test_runtime("Init.txt", "P0", params);
-        vector_destroy(params);
+        for (int i = -1; i <= 0; i++) {
+            for (int j = -1; j <= 0; j++){
+                for (int k = -1; k <= 0; k++){
+                    for (int l = -1; l <= 0; l++){
+                        Vector* params = vector_new(sizeof(int));
+                        vector_push_back(params, &(int) { i });
+                        vector_push_back(params, &(int) { j });
+                        vector_push_back(params, &(int) { k });
+                        vector_push_back(params, &(int) { l });
+                        // test_runtime("simple.txt", "P1", params);
+                        test_runtime("Init.txt", "P0", params);
+                        vector_destroy(params); 
+                    }
+                }
+            }
+        }
+
     }
 
-    {
-        Vector* params2 = vector_new(sizeof(int));
-        vector_push_back(params2, &(int) { -1 });
-        vector_push_back(params2, &(int) { 0 });
-        test_runtime("simple.txt", "P1", params2);
-        vector_destroy(params2);
-    }
+    // {
+    //     Vector* params2 = vector_new(sizeof(int));
+    //     vector_push_back(params2, &(int) { -1 });
+    //     vector_push_back(params2, &(int) { 0 });
+    //     test_runtime("simple.txt", "P1", params2);
+    //     vector_destroy(params2);
+    // }
     return 0;
 }
