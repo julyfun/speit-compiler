@@ -2,38 +2,9 @@
 
 #include <string.h>
 
-/*
-```
-<digit> ::= "0" | ... | "9"
-<letter> ::= "a" | ... | "z"
-<id> ::= <lettre> { <lettre> | <chiffre> }
+/// For BNF see readme.
 
-<primary_expr> ::= <id> | "(" <arrow_expr> ")"
-<unary_expr> ::= <primary_expr> | ¬ <unary_expr>
-<and_expr> ::= <unary_expr> | <unary_expr> ∧ <and_expr>
-<or_expr> ::= <and_expr> | <and_expr> ∨ <or_expr>
-<arrow_expr> ::= <or_expr> | <or_expr> ⇒ <arrow_expr>
-<regle> ::= <arrow_expr> → <arrow_expr>
-<expr> ::= <regle> | <arrow_expr>
-```
-*/
-
-// print tree with indents
-/*
-LEX_PRODUIT
-├── 1
-├── README.md
-├── analex.c
-├── analex.h
-├── anasynt.c
-├── anasynt.h
-├── assets
-│   ├── Init.txt
-│   ├── Regles.txt
-│   ├── Unicodes.txt
-│   ├── image.png
-│   └── projet.txt
-*/
+/// print tree with indents
 void print_syntax_tree(SyntaxNode* node, int level, Vector* stack_is_last_son) {
     if (node == NULL) {
         return;
