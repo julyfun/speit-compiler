@@ -71,6 +71,7 @@ void print_syntax_tree(SyntaxNode* node, int level, Vector* stack_is_last_son) {
     vector_pop_back(stack_is_last_son);
 }
 
+/// Parses binary operator expressions, handling lower precedence parsing functions.
 ParseResult parse_binary_op_expr(
     Vector* lexeme_list,
     size_t* index,
@@ -104,6 +105,9 @@ ParseResult parse_binary_op_expr(
 
 // [grounded parse funcs]
 
+/// Parses a syntax tree from a list of lexemes.
+/// Returns a ParseResult with the syntax tree or an error message
+/// (If `index` is not at the end of the list)
 ParseResult analyseur_syntaxique(Vector* lexeme_list) {
     size_t index = 0;
     ParseResult res = parse_expr(lexeme_list, &index);
@@ -119,7 +123,8 @@ ParseResult analyseur_syntaxique(Vector* lexeme_list) {
     return res;
 }
 
-// expr ::= rule | arrow_expr
+/// expr ::= rule | arrow_expr
+/// Parses an expression, which can be a rule or an arrow expression.
 ParseResult parse_expr(Vector* lexeme_list, size_t* index) {
     ParseResult res = parse_rule(lexeme_list, index);
     if (res.type == PARSE_OK) {
@@ -195,6 +200,7 @@ ParseResult parse_unary_expr(Vector* lexeme_list, size_t* index) {
     return parse_primary_expr(lexeme_list, index);
 }
 
+/// Parses primary expressions, handling identifiers and parenthesized expressions.
 ParseResult parse_primary_expr(Vector* lexeme_list, size_t* index) {
     if (*index >= lexeme_list->size) {
         ParseResult res = (ParseResult) { PARSE_ERR, .error = "" };

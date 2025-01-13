@@ -35,6 +35,9 @@ void print_vm_and_sym_tb(Vector* vm, Vector* sym_tb) {
     printf("\n");
 }
 
+/// Adds a built-in function to the symbol table and virtual machine.
+/// Updates the processor vector with the function address.
+/// Stores function metadata in the symbol table.
 void add_builtin(
     Vector* sym_tb,
     Vector* vm,
@@ -67,6 +70,8 @@ void add_builtin(
     vector_push_back(sym_tb, &sym_tb_start_idx);
 }
 
+/// Extracts the symbol name, parameter count, and VM address.
+/// Returns a tuple containing the parsed information.
 ParseSymbolTuple parse_symbol(int sym_tb_idx, Vector* sym_tb) {
     ParseSymbolTuple tuple;
     const int symbol_len = *(int*)vector_get(sym_tb, sym_tb_idx);
@@ -109,6 +114,8 @@ typedef struct {
     char error[MSG_LENGTH];
 } CompileFuncResult;
 
+/// Performs lexical, syntactic, and semantic analysis.
+/// Updates the virtual machine and symbol table with the compiled function.
 CompileFuncResult
 compile_add_func(char* input, Vector* virtual_machine, Vector* symbol_table, char* func_name) {
     LexicalResult lex_res = analyseur_lexical(input);
@@ -162,6 +169,9 @@ compile_add_func(char* input, Vector* virtual_machine, Vector* symbol_table, cha
     return (CompileFuncResult) { COMPILE_FUNC_OK, .error = "" };
 }
 
+/// Compiles a file containing multiple functions.
+/// Reads each line of the file and compiles it as a separate function.
+/// Returns the compiled virtual machine and symbol table.
 CompileResult compile(char* filename) {
     Vector* symbol_table = vector_new(sizeof(int));
     Vector* virtual_machine = vector_new(sizeof(int));
@@ -197,7 +207,9 @@ CompileResult compile(char* filename) {
         ) { .vm = virtual_machine, .sym_tb = symbol_table, .processeur = processeur } };
 }
 
-// post-order traversal
+/// Performs a depth-first search to generate VM instructions from the syntax tree.
+/// Traverses the syntax tree in post-order.
+/// Updates the virtual machine and symbol table with the instructions.
 void dfs_get_vm_func(
     SyntaxNode* node,
     Vector* virtual_machine,

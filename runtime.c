@@ -23,8 +23,9 @@ int Fin() {
     return -1;
 }
 
-/// function process is a stack.
-/// should not run with symbol table.
+/// Executes the virtual machine instructions starting from the given address.
+/// Uses a stack-based approach to handle function calls and parameters.
+/// Supports both built-in and user-defined functions.
 void execute(int vm_addr, Vector* vm, Vector* sym_tb, Vector* mem, Vector* processeur) {
     const int reg_pos = mem->size;
     const int sym_tb_idx = *(int*)vector_get(vm, vm_addr + 1);

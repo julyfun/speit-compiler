@@ -56,6 +56,8 @@ typedef enum {
     TRY_ADD_NOT_ID,
 } TryAddResult;
 
+/// Tries to add the buffer content as a property lexeme.
+/// Returns TRY_ADD_OK if successful, otherwise TRY_ADD_NOT_ID.
 TryAddResult try_add_buffer_as_prop(Vector* lexeme_list, char* buffer, int* buffer_index) {
     if (*buffer_index > 0) {
         // word in buffer not <id>? use regex
@@ -92,6 +94,8 @@ Utf8Char UTF8_CHARS[] = {
     { "OU", { (char)0xE2, (char)0x88, (char)0xA8 }, 3 } // ∨
 };
 
+/// Analyzes the input string and converts it to a sequence of lexemes.
+/// Returns a LexicalResult containing either the lexeme list or an error message.
 LexicalResult analyseur_lexical(char* input) {
     Vector* lexeme_list = init_lexeme_list();
     char buffer[10];
