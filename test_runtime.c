@@ -41,9 +41,9 @@ void test_runtime(char* filename, char* main_func_name, Vector* params) {
 int main() {
     {
         for (int i = -1; i <= 0; i++) {
-            for (int j = -1; j <= 0; j++){
-                for (int k = -1; k <= 0; k++){
-                    for (int l = -1; l <= 0; l++){
+            for (int j = -1; j <= 0; j++) {
+                for (int k = -1; k <= 0; k++) {
+                    for (int l = -1; l <= 0; l++) {
                         Vector* params = vector_new(sizeof(int));
                         vector_push_back(params, &(int) { i });
                         vector_push_back(params, &(int) { j });
@@ -51,12 +51,11 @@ int main() {
                         vector_push_back(params, &(int) { l });
                         // test_runtime("simple.txt", "P1", params);
                         test_runtime("Init.txt", "P0", params);
-                        vector_destroy(params); 
+                        vector_destroy(params);
                     }
                 }
             }
         }
-
     }
 
     // {
